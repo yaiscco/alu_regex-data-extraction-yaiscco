@@ -1,0 +1,128 @@
+{
+  "data": {
+    "emails": [
+      "john.doe@example.com",
+      "jane.smith@company.co.uk",
+      "user+tag@gmail.com"
+    ],
+    "phone_numbers": [
+      "(555) 123-4567",
+      "(800) 555-1234"
+    ],
+    "urls": [
+      "https://www.example.com",
+      "http://www.example.org",
+      "https://link.com"
+    ],
+    "html_tags": [
+      {
+        "tag": "<p>",
+        "name": "p",
+        "is_closing": false
+      },
+      {
+        "tag": "</p>",
+        "name": "p",
+        "is_closing": true
+      },
+      {
+        "tag": "<div class=\"container\">",
+        "name": "div",
+        "is_closing": false
+      },
+      {
+        "tag": "</div>",
+        "name": "div",
+        "is_closing": true
+      },
+      {
+        "tag": "<span style=\"color: blue;\">",
+        "name": "span",
+        "is_closing": false
+      },
+      {
+        "tag": "</span>",
+        "name": "span",
+        "is_closing": true
+      },
+      {
+        "tag": "<img src=\"image.jpg\" alt=\"Description\">",
+        "name": "img",
+        "is_closing": false
+      },
+      {
+        "tag": "<a href=\"https://link.com\">",
+        "name": "a",
+        "is_closing": false
+      },
+      {
+        "tag": "</a>",
+        "name": "a",
+        "is_closing": true
+      },
+      {
+        "tag": "<ul>",
+        "name": "ul",
+        "is_closing": false
+      },
+      {
+        "tag": "<li>",
+        "name": "li",
+        "is_closing": false
+      },
+      {
+        "tag": "</li>",
+        "name": "li",
+        "is_closing": true
+      },
+      {
+        "tag": "<li>",
+        "name": "li",
+        "is_closing": false
+      },
+      {
+        "tag": "</li>",
+        "name": "li",
+        "is_closing": true
+      },
+      {
+        "tag": "</ul>",
+        "name": "ul",
+        "is_closing": true
+      }
+    ],
+    "credit_cards": [
+      {
+        "number": "4111111111111111",
+        "masked": "4111XXXXXXXX1111",
+        "valid": true,
+        "length": 16
+      },
+      {
+        "number": "5500000000000004",
+        "masked": "5500XXXXXXXX0004",
+        "valid": true,
+        "length": 16
+      },
+      {
+        "number": "6011000000000004",
+        "masked": "6011XXXXXXXX0004",
+        "valid": true,
+        "length": 16
+      }
+    ]
+  },
+  "statistics": {
+    "total_emails": 3,
+    "total_phones": 2,
+    "total_urls": 3,
+    "total_html_tags": 15,
+    "total_credit_cards": 3,
+    "total_items": 26
+  },
+  "metadata": {
+    "timestamp": "2026-02-02T12:13:21.032110",
+    "version": "Final",
+    "data_types": 5
+  }
+}

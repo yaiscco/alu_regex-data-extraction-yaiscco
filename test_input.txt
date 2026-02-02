@@ -1,17 +1,37 @@
-Test data for Part 3
+Test data for Final Version - All Data Types
 
 Contact Information:
 Email: john.doe@example.com
+Secondary: jane.smith@company.co.uk
 Phone: (123) 456-7890
+Alternate: 555-123-4567
 URL: https://www.example.com
+Website: www.example.org
 
 HTML Content:
-<p>This is a paragraph</p>
-<div class="container">Content in a div</div>
+<p>This is a paragraph tag</p>
+<div class="container">Div with class attribute</div>
+<span style="color: blue;">Styled span element</span>
 <img src="image.jpg" alt="Description">
-<a href="https://link.com">Link</a>
+<a href="https://link.com">Click here</a>
+<ul><li>Item 1</li><li>Item 2</li></ul>
 
-More Contact Info:
-Email: jane@company.org
-Phone: 555-123-4567
-URL: www.website.org
+Credit Card Information (Test Data):
+Visa: 4111 1111 1111 1111
+MasterCard: 5500 0000 0000 0004
+American Express: 3782 822463 10005
+Discover: 6011 0000 0000 0004
+Invalid card: 4111 1111 1111 1112 (fails Luhn check)
+
+Dangerous Content (should be blocked):
+<script>alert("XSS attack");</script>
+<iframe src="malicious.com"></iframe>
+javascript:alert('bad code')
+data:text/html,<script>evil</script>
+
+Additional Test Cases:
+Email with plus: user+tag@gmail.com
+International format: +1-800-555-1234 (not extracted)
+Fake credit card: 1234 5678 9012 3456 (not valid)
+
+Security Note: All sensitive data will be masked in output.
