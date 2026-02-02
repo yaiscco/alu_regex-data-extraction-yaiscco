@@ -1,0 +1,23 @@
+{
+  "emails": [],
+  "phone_numbers": [
+    "(987) 654-3210",
+    "(555) 123-4567",
+    "(800) 555-1234"
+  ],
+  "urls": [
+    "https://www.example.com",
+    "https://secure.example.com",
+    "http://blog.example.com/posts/article-1",
+    "http://www.example.org",
+    "https://example.com/products/page.html?item=123",
+    "http://www.website.com",
+    "https://support.website.com/help",
+    "https://link.com"
+  ],
+  "summary": {
+    "total_emails": 0,
+    "total_phones": 3,
+    "total_urls": 8
+  }
+}
