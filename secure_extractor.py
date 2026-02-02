@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """
-Secure Regular Expression Data Extraction System - Part 2: Basic Patterns
+Regex Data Extraction - Part 3
+With Security and HTML Tag Extraction
 """
 
 import re
@@ -8,176 +9,154 @@ import json
 from typing import List, Dict, Any
 
 class SecureRegexExtractor:
-    """Main class for extracting data using regex patterns"""
-    
     def __init__(self):
-        """Initialize the extractor with regex patterns"""
-        print("Initializing SecureRegexExtractor...")
         self.setup_patterns()
+        self.max_input_size = 100000
+        self.dangerous_tags = ['script', 'iframe', 'object', 'embed', 'form']
     
     def setup_patterns(self):
-        """Set up all regex patterns for data extraction"""
-        print("Setting up regex patterns...")
+        # Email pattern
+        self.email_pattern = re.compile(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}')
         
-        # Email pattern: finds email addresses
-        self.email_pattern = re.compile(r"""
-            \b                     # Word boundary
-            [a-zA-Z0-9._%+-]+      # Local part (username)
-            @                      @ symbol
-            [a-zA-Z0-9.-]+         # Domain name
-            \.                     # Dot before TLD
-            [a-zA-Z]{2,}           # TLD (com, org, uk, etc.)
-            \b                     # Word boundary
-        """, re.VERBOSE | re.IGNORECASE)
+        # Phone pattern
+        self.phone_pattern = re.compile(r'(?:\(\d{3}\)|\d{3}[-.]?)\d{3}[-.]?\d{4}')
         
-        # Phone pattern: finds US/Canada phone numbers
-        self.phone_pattern = re.compile(r"""
-            \b                     # Word boundary
-            (?:                    # Area code options:
-              \(\d{3}\)            # (123)
-              |                    # OR
-              \d{3}[-.]?           # 123 or 123- or 123.
-            )
-            [-.]?                  # Optional separator
-            \d{3}                  # First 3 digits
-            [-.]?                  # Optional separator  
-            \d{4}                  # Last 4 digits
-            \b                     # Word boundary
-        """, re.VERBOSE)
+        # URL pattern  
+        self.url_pattern = re.compile(r'(?:https?://|www\.)[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}(?:/[^ ]*)?')
         
-        # URL pattern: finds website addresses
-        self.url_pattern = re.compile(r"""
-            \b                     # Word boundary
-            (?:https?://|www\.)    # http:// or https:// or www.
-            [a-zA-Z0-9.-]+         # Domain name
-            \.                     # Dot before TLD
-            [a-zA-Z]{2,}           # TLD
-            (?:/[a-zA-Z0-9_\-\.~:/?#\[\]@!$&'()*+,;=%]*)?  # Optional path
-            \b                     # Word boundary
-        """, re.VERBOSE | re.IGNORECASE)
-        
-        print("Patterns setup complete!")
+        # HTML tag pattern - NEW in Part 3
+        self.html_tag_pattern = re.compile(r'<(/)?([a-zA-Z][a-zA-Z0-9]*)(?:\s+[^>]*)?>')
+    
+    def validate_input_size(self, text: str) -> bool:
+        return len(text) <= self.max_input_size
+    
+    def is_suspicious_email(self, email: str) -> bool:
+        patterns = [r'\.{2,}', r'\.@', r'@\.', r'\.$', r'^\.']
+        for pattern in patterns:
+            if re.search(pattern, email):
+                return True
+        return False
+    
+    def is_dangerous_url(self, url: str) -> bool:
+        patterns = [r'javascript:', r'data:', r'file:', r'\.exe$', r'\.js$']
+        url_lower = url.lower()
+        for pattern in patterns:
+            if re.search(pattern, url_lower):
+                return True
+        return False
     
     def extract_emails(self, text: str) -> List[str]:
-        """Extract all email addresses from text"""
         emails = self.email_pattern.findall(text)
-        return emails
+        return [email for email in emails if not self.is_suspicious_email(email)]
     
     def extract_phones(self, text: str) -> List[str]:
-        """Extract all phone numbers from text"""
         phones = self.phone_pattern.findall(text)
-        # Clean up the phone numbers
-        cleaned_phones = []
+        normalized = []
         for phone in phones:
-            # Remove non-digit characters
             digits = re.sub(r'\D', '', phone)
-            # Format as (XXX) XXX-XXXX
             if len(digits) == 10:
                 formatted = f"({digits[:3]}) {digits[3:6]}-{digits[6:]}"
-                cleaned_phones.append(formatted)
-        return cleaned_phones
+                normalized.append(formatted)
+        return normalized
     
     def extract_urls(self, text: str) -> List[str]:
-        """Extract all URLs from text"""
         urls = self.url_pattern.findall(text)
-        # Ensure http:// prefix for www. URLs
-        processed_urls = []
+        valid_urls = []
         for url in urls:
             if url.startswith('www.'):
                 url = 'http://' + url
-            processed_urls.append(url)
-        return processed_urls
+            if not self.is_dangerous_url(url):
+                valid_urls.append(url)
+        return valid_urls
+    
+    def extract_html_tags(self, text: str) -> List[Dict[str, str]]:
+        tags = []
+        for match in self.html_tag_pattern.finditer(text):
+            full_tag = match.group(0)
+            tag_name = match.group(2)
+            is_closing = bool(match.group(1))
+            if tag_name.lower() in self.dangerous_tags:
+                continue
+            tags.append({
+                'tag': full_tag,
+                'name': tag_name,
+                'is_closing': is_closing
+            })
+        return tags
     
     def process_text(self, text: str) -> Dict[str, Any]:
-        """Main function to process text and extract all data"""
-        print(f"\nProcessing text of length: {len(text)} characters")
+        if not self.validate_input_size(text):
+            return {"error": "Input too large"}
         
-        # Extract all data types
         emails = self.extract_emails(text)
         phones = self.extract_phones(text)
         urls = self.extract_urls(text)
+        html_tags = self.extract_html_tags(text)
         
-        # Create result dictionary
-        result = {
-            "emails": emails,
-            "phone_numbers": phones,
-            "urls": urls,
-            "summary": {
+        return {
+            "data": {
+                "emails": emails,
+                "phone_numbers": phones,
+                "urls": urls,
+                "html_tags": html_tags
+            },
+            "statistics": {
                 "total_emails": len(emails),
                 "total_phones": len(phones),
-                "total_urls": len(urls)
+                "total_urls": len(urls),
+                "total_html_tags": len(html_tags)
             }
         }
-        
-        return result
 
 def main():
-    """Main function to run the program"""
-    print("=" * 50)
-    print("REGEX DATA EXTRACTION SYSTEM - PART 2")
-    print("=" * 50)
+    print("=" * 60)
+    print("REGEX EXTRACTION - PART 3")
+    print("With Security & HTML Tags")
+    print("=" * 60)
     
-    # Create the extractor
-    print("\nCreating extractor...")
     extractor = SecureRegexExtractor()
     
     try:
-        # Read test input
-        print("Reading test_input.txt...")
         with open('test_input.txt', 'r') as file:
-            sample_text = file.read()
+            text = file.read()
         
-        # Process the text
-        print("Extracting data from text...")
-        result = extractor.process_text(sample_text)
+        result = extractor.process_text(text)
         
-        # Display results
-        print("\n" + "=" * 50)
-        print("EXTRACTION RESULTS")
-        print("=" * 50)
+        print("\nRESULTS:")
+        print("=" * 60)
         
-        print("\n--- EMAILS FOUND ---")
-        if result["emails"]:
-            for email in result["emails"]:
-                print(f"  • {email}")
-        else:
-            print("  No emails found")
+        if "error" in result:
+            print(f"Error: {result['error']}")
+            return
         
-        print("\n--- PHONE NUMBERS FOUND ---")
-        if result["phone_numbers"]:
-            for phone in result["phone_numbers"]:
-                print(f"  • {phone}")
-        else:
-            print("  No phone numbers found")
+        print(f"\nEmails found: {result['statistics']['total_emails']}")
+        for email in result["data"]["emails"]:
+            print(f"  • {email}")
         
-        print("\n--- URLs FOUND ---")
-        if result["urls"]:
-            for url in result["urls"]:
-                print(f"  • {url}")
-        else:
-            print("  No URLs found")
+        print(f"\nPhone numbers found: {result['statistics']['total_phones']}")
+        for phone in result["data"]["phone_numbers"]:
+            print(f"  • {phone}")
         
-        print("\n" + "=" * 50)
-        print("SUMMARY")
-        print("=" * 50)
-        print(f"Total emails: {result['summary']['total_emails']}")
-        print(f"Total phone numbers: {result['summary']['total_phones']}")
-        print(f"Total URLs: {result['summary']['total_urls']}")
+        print(f"\nURLs found: {result['statistics']['total_urls']}")
+        for url in result["data"]["urls"]:
+            print(f"  • {url}")
         
-        print("\nPart 2 complete! Ready for Part 3 (security features).")
+        print(f"\nHTML Tags found: {result['statistics']['total_html_tags']}")
+        for tag in result["data"]["html_tags"]:
+            tag_type = "Closing" if tag["is_closing"] else "Opening"
+            print(f"  • {tag_type}: {tag['tag'][:50]}")
         
-        # Also save results to JSON file
-        with open('extraction_results.json', 'w') as json_file:
-            json.dump(result, json_file, indent=2)
-        print("\nResults saved to 'extraction_results.json'")
+        # Save results
+        with open('part3_results.json', 'w') as f:
+            json.dump(result, f, indent=2)
+        print(f"\nResults saved to 'part3_results.json'")
+        
+        print("\n" + "=" * 60)
+        print("PART 3 COMPLETE!")
+        print("=" * 60)
         
     except FileNotFoundError:
-        print("\nError: test_input.txt not found!")
-        print("Make sure test_input.txt exists in the same directory")
-    except Exception as e:
-        print(f"\nError: {e}")
-        import traceback
-        traceback.print_exc()
+        print("Error: test_input.txt not found")
 
 if __name__ == "__main__":
     main()

@@ -1,48 +1,17 @@
-TEST DATA FOR REGEX EXTRACTION - PART 2
+Test data for Part 3
 
-CONTACT INFORMATION:
-====================
-Primary Email: john.doe@example.com
-Secondary Email: jane_smith@company.co.uk
-Work Contact: support@helpdesk.org
-Invalid emails (should NOT be extracted): 
-- user@.com
-- @example.com
-- user@com
+Contact Information:
+Email: john.doe@example.com
+Phone: (123) 456-7890
+URL: https://www.example.com
 
-Phone Numbers:
-==============
-Office: (123) 456-7890
-Mobile: 987-654-3210
-Home: 555.123.4567
-International: +1-800-555-1234 (should NOT extract - wrong format)
-Fax: 1 (234) 567-8901 (should NOT extract - wrong format)
+HTML Content:
+<p>This is a paragraph</p>
+<div class="container">Content in a div</div>
+<img src="image.jpg" alt="Description">
+<a href="https://link.com">Link</a>
 
-Website URLs:
-=============
-Main Site: https://www.example.com
-Secure Site: https://secure.example.com
-Blog: http://blog.example.com/posts/article-1
-Without Protocol: www.example.org
-With Path: https://example.com/products/page.html?item=123
-Invalid URLs (should NOT be extracted):
-- example.com (no protocol)
-- ftp://files.com (wrong protocol)
-- javascript:alert('test') (dangerous!)
-
-ADDITIONAL TEST TEXT:
-=====================
-Please contact sales@company.com or call (888) 555-0123.
-Visit our website at www.website.com for more information.
-For support, email help@support.com or visit https://support.website.com/help.
-
-This is normal text without any contact information to test that 
-we don't extract things that aren't there.
-
-HTML TEST:
-==========
-<p>Contact us at info@test.com</p>
-<div>Phone: (111) 222-3333</div>
-<a href="https://link.com">Click here</a>
-
-END OF TEST DATA
+More Contact Info:
+Email: jane@company.org
+Phone: 555-123-4567
+URL: www.website.org

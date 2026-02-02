@@ -1,0 +1,59 @@
+{
+  "data": {
+    "emails": [
+      "john.doe@example.com",
+      "jane@company.org"
+    ],
+    "phone_numbers": [
+      "(555) 123-4567"
+    ],
+    "urls": [
+      "https://www.example.com",
+      "https://link.com",
+      "http://www.website.org"
+    ],
+    "html_tags": [
+      {
+        "tag": "<p>",
+        "name": "p",
+        "is_closing": false
+      },
+      {
+        "tag": "</p>",
+        "name": "p",
+        "is_closing": true
+      },
+      {
+        "tag": "<div class=\"container\">",
+        "name": "div",
+        "is_closing": false
+      },
+      {
+        "tag": "</div>",
+        "name": "div",
+        "is_closing": true
+      },
+      {
+        "tag": "<img src=\"image.jpg\" alt=\"Description\">",
+        "name": "img",
+        "is_closing": false
+      },
+      {
+        "tag": "<a href=\"https://link.com\">",
+        "name": "a",
+        "is_closing": false
+      },
+      {
+        "tag": "</a>",
+        "name": "a",
+        "is_closing": true
+      }
+    ]
+  },
+  "statistics": {
+    "total_emails": 2,
+    "total_phones": 1,
+    "total_urls": 3,
+    "total_html_tags": 7
+  }
+}
